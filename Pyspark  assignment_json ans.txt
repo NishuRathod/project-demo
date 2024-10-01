@@ -1,0 +1,31 @@
+1. Perform the following questions on people.json data:
+df = spark.read.json("people.json")
+df.printSchema()
+
+1. Count number of records
+df.count()
+
+2. create a new column with the simple copy of age column.
+df.withColumn("age_copy",df["age"]).show()
+
+3. create a new column containing ages of people one year bigger.
+from pyspark.sql.functions import col
+df.withColumn("age_copy", col("age")+1).show()
+
+4. Show the records where age column is missing.
+df.filter(col("age").isNull()).show()
+
+5. Fetch the records having atleast one non-null values.
+df.filter(col("name").isNotNull() | col("age").isNotNull()).show()
+
+6. Fill the missing values of age column with mean.
+from pyspark.sql.functions import  mean
+mean_age = df.select(mean(col("age"))).collect()[0][0]
+df.fillna(mean_age, subset=["age"]).show()
+
+7. Write a sql query to find the people with age greater than 19.
+df.createOrReplaceTempView("Age")
+df_age=spark.sql("SELECT * FROM AGE WHERE age > '19'")
+df_age.show()
+
+
