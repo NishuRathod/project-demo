@@ -1,0 +1,42 @@
+For Superheroes dataset:
+1. Reading Data from file
+2. Show only top 10 records.
+3. Find the count of male heroes.
+4. Find the count of Female heroes.
+5. Find the count of the particular race.
+6. Change the datatype of height column
+7. Find the average height of characters in each publisher
+8. Add a column which indicates true if the value in Alignment column is good,
+false if the value is bad.
+9. Write a sql query to select superheroes with blue eyes(name ,eye color,gender)
+10. write a sql query for counting the superheroes characters by alignment
+
+from google.colab import files
+files.upload()
+
+1.df = spark.read.csv("heroes_information.csv", header = True)
+2.df.show(10)
+3.df.filter(df.Gender == 'Male').count()
+
+4.df.filter(df.Gender == 'Female').count()
+
+5.df.groupby("Race").count().show()
+
+6. df1  = df.withColumn("Height",col("Height").cast("INTEGER"))
+   df1.printSchema()
+
+7. df1.groupBy("Publisher").avg("Height").show()
+
+8. df2 = df.withColumn("Is_Good",df.Alignment == "good")
+   df2.show()
+
+9. df.createOrReplaceTempView("Hero")
+spark.sql("SELECT name, EyeColor, Gender FROM Hero WHERE EyeColor = 'blue'").show()
+ 
+
+10.spark.sql("SELECT Alignment, COUNT(name) AS name_count, COUNT(Gender) AS gender_count, 
+COUNT(Publisher) AS publisher_count FROM Hero GROUP BY Alignment").show()
+ 
+
+ 
+ 
